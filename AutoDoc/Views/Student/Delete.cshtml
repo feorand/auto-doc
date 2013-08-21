@@ -1,0 +1,21 @@
+﻿@model AutoDoc.Models.Student
+
+@{
+    ViewBag.Title = "Удаление студента";
+}
+
+<h2> @ViewBag.Title </h2>
+
+<h3>Вы действительно хотите удалить данного студента?</h3>
+<fieldset>
+    <legend>@ViewBag.Title</legend>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName) @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.MiddleName)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Удалить" /> |
+        @Html.ActionLink("Назад", "Index", "Group", new { id = Model.GroupId}, null)
+    </p>
+}

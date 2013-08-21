@@ -1,0 +1,20 @@
+﻿@model IEnumerable<AutoDoc.Models.Subject>
+
+<table>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ActionLink(item.SubjectName.ToString(), "Index", new { id = item.Id})
+            </td>
+            @if (WebSecurity.IsAuthenticated && (User.IsInRole("Учебная часть") || User.IsInRole("Администратор")))
+            { 
+                <td>
+                    @Html.ActionLink("Управление правами", "Grant", new {id = item.Id}) |
+                    @Html.ActionLink("Изменить информацию", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+                </td>           
+            }
+        </tr>
+    }
+</table>

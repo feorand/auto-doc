@@ -1,0 +1,32 @@
+﻿@model AutoDoc.Models.Subject
+
+@{
+    ViewBag.Title = "Удаление учебной дисциплины";
+}
+
+<h2> @ViewBag.Title </h2>
+
+<h3> Вы действительно хотите удалить данную дисциплину? </h3>
+<fieldset>
+    <legend> @ViewBag.Title </legend>
+
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.GroupId)
+
+    <div class="display-label">
+         @Html.LabelFor(model => model.SubjectName) 
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SubjectName)
+    </div>
+
+    <p>
+        Написать что-нибудь страшное про удаление
+    </p>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Удалить" /> |
+        @Html.ActionLink("Назад", "Index", "Group", new { id = Model.GroupId}, null)
+    </p>
+}

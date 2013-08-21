@@ -1,0 +1,35 @@
+﻿@model IEnumerable<AutoDoc.Models.Student>
+
+@{
+    ViewBag.Title = "Результат поиска";
+}
+
+<h2>Результат поиска</h2>
+
+<style>
+    h3.cent
+    {
+        text-align: center;
+    }
+</style>
+
+@if (Model.Count() > 0)
+{
+<table>
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.MiddleName) (Группа @Html.ActionLink(item.GroupName.ToString(), "Index", "Group", new { id=item.GroupId}, null))
+        </td>
+    </tr>
+}
+</table>
+}
+else
+{
+    <div>Никого не найдено...</div>
+}
+
+
+<br />
+<h3 class="cent">@Html.ActionLink("Назад", "List", "Group")</h3>

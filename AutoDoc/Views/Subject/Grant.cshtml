@@ -1,0 +1,78 @@
+﻿@model AutoDoc.Models.GrantSubject
+
+@{
+    ViewBag.Title = "Права";
+}
+
+<h2>@string.Concat("Возможность выставления баллов по дисциплине ", Model.Subject.SubjectName)</h2>
+
+<style>
+    .green
+    {
+        background-color: green !important;
+    }
+
+    .red
+    {
+        background-color: red !important;
+    }
+
+    .cent
+    {
+        text-align: center;
+    }
+</style>
+
+<h3>Преподаватели, уже имеющие доступ</h3>
+
+@if (Model.Subject.Lectors.Count != 0)
+{
+    <table>
+        @foreach (var item in Model.Subject.Lectors)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div>Никого нет</div>
+}
+
+<hr />
+
+<h3>Все преподаватели</h3>
+<table>
+    @foreach (var item in Model.Lectors)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName) @Html.DisplayFor(modelItem => item.FirstName) @Html.DisplayFor(modelItem => item.MiddleName)
+            </td>
+            <td>
+                @if (!item.Subjects.Contains(Model.Subject))
+                {
+                    using (Html.BeginForm(new { id = Model.Subject.Id, userId = item.UserId }))
+                    { 
+                    <input type="submit" value="Разрешить" class="green" />
+                    }
+                }
+                else
+                {
+                    using (Html.BeginForm(new { id = Model.Subject.Id, userId = item.UserId }))
+                    { 
+                    <input type="submit" value="Запретить" class="red" />
+                    }
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+<br />
+<h3 class="cent">@Html.ActionLink("Назад", "Index", "Group", new { id = Model.Subject.GroupId}, null)</h3>

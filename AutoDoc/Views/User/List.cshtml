@@ -1,0 +1,72 @@
+﻿@model IEnumerable<AutoDoc.Models.User>
+
+<style>
+    table
+    {
+        margin: 0 auto;
+    }
+
+    th
+    {
+        text-align: left;
+        width: 120px;
+    }
+</style>
+
+@{
+    ViewBag.Title = "Список пользователей"; 
+}
+
+<h2> @ViewBag.Title </h2>
+
+<p>
+    @Html.ActionLink("Создать пользователя", "Create")
+</p>
+
+<table>
+    <tr>
+        <th>Фамилия
+        </th>
+        <th>Имя
+        </th>
+        <th>Отчество
+        </th>
+        <th>Логин
+        </th>
+        <th style="width: 80px;">Роль
+        </th>
+        <th style="width: 310px;"></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MiddleName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserLogin)
+            </td>
+            <td>
+                @foreach (var role in Roles.GetRolesForUser(item.UserLogin))
+                {
+                    <text>@role</text>
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Редактировать", "Edit", new { id = item.UserId })
+                @if (item.UserId != WebSecurity.CurrentUserId)
+                {
+                    <text> | @Html.ActionLink("Сменить пароль", "ChangePassword", new { id = item.UserId }) </text>
+                    <text> | @Html.ActionLink("Удалить", "Delete", new { id = item.UserId }) </text>
+                }
+            </td>
+        </tr>
+    }
+</table>

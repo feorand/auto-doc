@@ -1,0 +1,14 @@
+﻿@model AutoDoc.Models.User
+@if (WebSecurity.IsAuthenticated) {
+    <text>
+        Пользователь: <strong> @Model.LastName @Model.FirstName @Model.MiddleName</strong> (@Model.Role)
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
+            @Html.AntiForgeryToken()
+            <a href="javascript:document.getElementById('logoutForm').submit()">Выйти</a>
+        }
+    </text>
+} else {
+    <ul>
+        <li>@Html.ActionLink("Вход для сотрудников", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>
+}

@@ -1,0 +1,33 @@
+﻿@model AutoDoc.Models.LoginUser
+
+@{
+    ViewBag.Title = "Вход для сотрудников";
+}
+
+<h1>@ViewBag.Title</h1>
+
+@using (Html.BeginForm(new { ReturnUrl = ViewBag.ReturnUrl })) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>@ViewBag.Title</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.UserLogin)
+                @Html.TextBoxFor(m => m.UserLogin)
+                @Html.ValidationMessageFor(m => m.UserLogin)
+            </li>
+            <li>
+                @Html.LabelFor(m => m.Password)
+                @Html.PasswordFor(m => m.Password)
+                @Html.ValidationMessageFor(m => m.Password)
+            </li>
+        </ol>
+        <input type="submit" value="Войти" />
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

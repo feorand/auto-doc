@@ -1,0 +1,20 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Ошибка";
+}
+
+<style>
+    .cent
+    {
+        text-align: center;
+    }
+</style>
+<h1 class="error">Нет прав</h1>
+
+<p>
+    У Вас нет прав для редактирования данного предмета
+</p>
+
+<br />
+<h3 class="cent"><a href="@ViewBag.Url">Назад</a></h3>

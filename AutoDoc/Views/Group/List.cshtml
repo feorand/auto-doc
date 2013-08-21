@@ -1,0 +1,48 @@
+﻿@model IEnumerable<AutoDoc.Models.Group>
+
+@{
+    ViewBag.Title = "Список групп";
+}
+
+<h2>@ViewBag.Title </h2>
+
+@using (@Html.BeginForm("Search", "Student", FormMethod.Get))
+{
+    <div>Поиск студента</div>
+    @Html.TextBox("search")
+    <p>
+        <input type="submit" value="Искать" />
+    </p>
+}
+
+@if (WebSecurity.IsAuthenticated && (User.IsInRole("Учебная часть") || User.IsInRole("Администратор")))
+{ 
+    <p>
+        @Html.ActionLink("Создать группу", "Create")
+    </p>
+}
+@for (int i = 1; i <= 6; i++)
+{
+    if (Model.Where(x => x.GroupName.ElementAt(x.GroupName.IndexOf('-') + 1).ToString() == i.ToString()).Count() > 0)
+    { 
+    <h3>@i курс</h3>
+    <table>
+        @foreach (var item in Model.Where(x => x.GroupName.ElementAt(x.GroupName.IndexOf('-') + 1).ToString() == i.ToString()))
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.GroupName.ToString(), "Index", "Group", new { id = item.Id }, null)
+                </td>
+                @if (WebSecurity.IsAuthenticated && (User.IsInRole("Учебная часть") || User.IsInRole("Администратор")))
+                { 
+                    <td>
+                        @Html.ActionLink("Удалить", "Delete", new { id = item.Id })
+                    </td>       
+                }
+            </tr>
+        }
+    </table>
+    <hr />   
+    }
+
+}

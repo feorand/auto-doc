@@ -1,0 +1,21 @@
+﻿@model AutoDoc.Models.User
+
+@{
+    ViewBag.Title = "Удаление пользователя";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<h3> Вы действительно хотите удалить данного пользователя? </h3>
+<fieldset>
+    <legend>@ViewBag.Title</legend>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.LastName) @Html.DisplayFor(model => model.FirstName) @Html.DisplayFor(model => model.MiddleName) (@Html.DisplayFor(model => model.UserLogin))
+    </div>
+</fieldset>
+@using (Html.BeginForm(new { id = Model.UserId} )) {
+    <p>
+        <input type="submit" value="Удалить" /> |
+        @Html.ActionLink("Назад", "List")
+    </p>
+}

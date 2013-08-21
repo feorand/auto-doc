@@ -1,0 +1,281 @@
+﻿@model AutoDoc.Models.DisplaySubject
+
+@{
+    ViewBag.Title = "Статистика предмета " + Model.SubjectName;
+}
+
+<h2>@ViewBag.Title </h2>
+<h2>Группа @Model.GroupName</h2>
+@{
+    var IsAllowed = false;
+    foreach (var item in Model.Lectors)
+    {
+        if (item.UserId == WebSecurity.CurrentUserId)
+        {
+            IsAllowed = true;
+            break;
+        }
+    }
+}
+<style>
+    table#subject, table#subject th, table#subject td, table#subject tr
+    {
+        border-style: solid;
+        border-width: thin;
+        text-align: center;
+        vertical-align: middle;
+        border-collapse: collapse;
+    }
+
+    table#subject
+    {
+        border-width: medium;
+    }
+
+    a.mark
+    {
+        text-decoration: none;
+    }
+
+    th.sect
+    {
+        width: 150px;
+    }
+
+    th.result
+    {
+        background-color: lightgray;
+        width: 50px;
+    }
+
+    th.total
+    {
+        width: 70px;
+    }
+
+    th.allowed
+    {
+        width: 70px;
+    }
+
+    th.cform
+    {
+        width: 50px;
+    }
+
+    tr.student
+    {
+        height: 50px;
+    }
+
+    td.student
+    {
+        text-align: left;
+        padding-left: 3px;
+    }
+
+    td.result
+    {
+        background-color: lightgray;
+    }
+
+    td.allowedYes
+    {
+        font-weight: bold;
+        color: green;
+        border-color: black;
+    }
+
+    td.allowedNo
+    {
+        color: red;
+        border-color: black;
+    }
+
+    .control
+    {
+        font-size: larger;
+    }
+
+    h3.cent
+    {
+        text-align: center;
+    }
+</style>
+
+ @if (WebSecurity.IsAuthenticated)
+ { 
+    <h3>Преподаватели</h3>
+     foreach (var item in Model.Lectors)
+     {
+         <div>@item.LastName @item.FirstName @item.MiddleName</div>
+     }
+ }
+
+<table id="subject">
+    <tr>
+        <th class="sect">Раздел
+        </th>
+
+        @foreach (var sect in Model.Sections)
+        {
+            if (sect.ControlForms.Count != 0)
+            {
+            <th colspan="@sect.ControlForms.Count">
+                @Html.Label(sect.Name)
+            </th>
+            }
+            
+            <th rowspan="3" class="result">Итог
+                <br />
+                @sect.Name
+            </th>
+        }
+
+        <th rowspan="3" class="total">Сумма
+            <br />
+            баллов
+        </th>
+
+        <th rowspan="3" class="allowed">Допуск
+        </th>
+    </tr>
+
+    <tr>
+        <th>Недели
+        </th>
+
+        @foreach (var sect in Model.Sections)
+        {
+            foreach (var item in sect.ControlForms)
+            {
+            <th class="cform">
+                @item.Week
+            </th>
+            }
+        }
+    </tr>
+
+    <tr>
+        <th>Форма контроля
+        </th>
+
+        @foreach (var sect in Model.Sections)
+        {
+            foreach (var item in sect.ControlForms)
+            {
+            <th>
+                @item.Name
+            </th>
+            }
+        }
+    </tr>
+
+    <tr>
+        <th>ФИО / Макс. баллы
+        </th>
+        @foreach (var sectItem in Model.Sections)
+        {
+            foreach (var item in sectItem.ControlForms)
+            {
+            <th>
+                @item.MaxScore
+            </th>
+            }
+            <th class="total">
+                @sectItem.MaxScore
+            </th>
+        }
+        <th>
+            @Model.MaxScore
+        </th>
+        <th>
+            @Model.AllowedScore
+        </th>
+    </tr>
+
+    @foreach (var studItem in Model.Students.OrderBy(x => x.FullName))
+    {
+        <tr class="student">
+            <td class="student">
+                @studItem.Name
+            </td>
+            @foreach (var sectItem in studItem.Sections)
+            {
+                foreach (var markItem in sectItem.Marks)
+                {
+                <td>
+                    @if (WebSecurity.IsAuthenticated && IsAllowed)
+                    {
+                        @Html.ActionLink(markItem.Score.ToString(), "Edit", "Mark", new { id = markItem.Id }, new { @class = "mark" })
+                    }
+                    else
+                    {
+                        @markItem.Score
+                    }
+                </td>
+                }
+                <td class="result">
+                    @sectItem.TotalScore
+                </td>
+            }
+            <td>
+                @studItem.TotalScore
+            </td>
+
+            @if (studItem.IsAllowed)
+            { 
+                <td class="allowedYes">Да</td>
+            }
+            else
+            {
+                <td class="allowedNo">Нет</td>
+            }
+        </tr>
+    }
+</table>
+
+<br />
+
+<table>
+    @foreach (var sectItem in Model.Sections)
+    {
+        foreach (var item in sectItem.ControlForms)
+        {
+        <tr>
+            <td class="control">
+                <strong>@item.Name</strong>
+            </td>
+            <td>&nbsp @item.Description
+            </td>
+        </tr>
+        }
+    }
+</table>
+
+@if (WebSecurity.IsAuthenticated && IsAllowed)
+{ 
+    <h3>Управление формами контроля</h3>
+    foreach (var item in Model.Sections)
+    {
+    <h4>@item.Name</h4>
+    <text> @Html.ActionLink("Добавить", "Create", "ControlForm", new { SectionId = item.id }, null) </text>
+    <br />
+    <table>
+        @foreach (var cform in item.ControlForms)
+        {
+            <tr>
+                <td>
+                    @cform.Name
+                </td>
+                <td>
+                    @Html.ActionLink("Редактировать", "Edit", "ControlForm", new { id = cform.Id }, null) | @Html.ActionLink("Удалить", "Delete", "ControlForm", new { id = cform.Id }, null)
+                </td>
+            </tr>
+        }
+    </table>
+    }
+}
+
+<br />
+<h3 class="cent">@Html.ActionLink("Назад", "Index", "Group", new { id = ViewBag.GroupId }, null)</h3>

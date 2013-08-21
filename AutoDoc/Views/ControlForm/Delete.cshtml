@@ -1,0 +1,36 @@
+﻿@model AutoDoc.Models.ControlForm
+
+@{
+    ViewBag.Title = "Удаление формы контроля";
+}
+
+<h2> @ViewBag.Title </h2>
+
+<h3> Вы действительно хотите удалить форму контроля? </h3>
+<fieldset>
+    <legend> @ViewBag.Title </legend>
+
+    @Html.HiddenFor(model => model.SubjectId)
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name): @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Description): @Html.DisplayFor(model => model.Description)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Week): @Html.DisplayFor(model => model.Week)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MaxScore): @Html.DisplayFor(model => model.MaxScore)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Удалить" /> |
+        @Html.ActionLink("Назад", "Index", "Subject", new { id = Model.SubjectId}, null)
+    </p>
+}

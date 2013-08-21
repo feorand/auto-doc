@@ -1,0 +1,187 @@
+﻿@model AutoDoc.Models.RatingGroup
+
+@{
+    ViewBag.Title = Model.Name;
+}
+
+<style>
+    table.group, table.group th, table.group td
+    {
+        border-collapse: collapse;
+        border: solid thin black;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    table.group
+    {
+        border: solid medium black;
+    }
+
+    .vert {
+	    -webkit-transform: rotate(270deg);
+	    -moz-transform: rotate(270deg);
+	    -o-transform: rotate(270deg);
+	    transform: rotate(270deg);
+    }
+
+    .student
+    {
+        width: 12em;
+    }
+
+    .subject
+    {
+        width: 4em;
+    }
+
+    .subjectSpan
+    {
+        overflow: hidden;
+        display: block;
+        width: 4em;
+    }
+
+    .subjectCell
+    {
+        width: 2em;
+    }
+
+    .subjectCellSpan
+    {
+        display: block;
+        overflow: visible;
+        width: 2em;
+        position: relative;
+        top: 0.5em;
+    }
+
+    .subjectRowLower, .subjectRowUpper
+    {
+        height: 4em;
+    }
+
+    .descr
+    {
+        width: 2em;
+    }
+
+    table.group th.rightborder, table.group td.rightborder
+    {
+        border-right-width: medium;
+        border-right-style: solid;
+    }
+
+    h3.cent
+    {
+        text-align: center;
+    }
+</style>
+
+<h2>Карта текущего рейтинга студентов группы @Model.Name</h2>
+
+<table class="group">
+    <tr>
+        <th rowspan="3" class="student rightborder">
+            Фамилия И.О. <br />студента
+        </th>
+        <th colspan="@(Model.Subjects.Count*2)" class="rightborder">
+            Дисциплины
+        </th>
+        <th rowspan="2" colspan="2">
+            Совокупный<br /> текущий<br /> рейтинг
+        </th>
+    </tr>
+
+    <tr class="subjectRowUpper">
+        @foreach (var item in Model.Subjects)
+        {
+            <th colspan="2" class="subject rightborder">
+                <span class="subjectSpan">
+                    @item.ShortName
+                </span>
+            </th>
+        }
+    </tr>
+
+    <tr class="subjectRowLower">
+        @foreach (var item in Model.Subjects)
+        {
+            <th  class="subjectCell">
+                <span class="vert subjectCellSpan">
+                    Баллы
+                </span>
+            </th>
+            <th  class="subjectCell rightborder">
+                <span class="vert subjectCellSpan">
+                    Место
+                </span>
+            </th>
+        }
+
+        <th class="vert">Баллы</th>
+        <th class="vert">Место</th>
+    </tr>
+    @foreach (var student in Model.Students.OrderBy(x=>x.FullName))
+    {
+        <tr>
+            <td class="rightborder">
+                @student.Name
+            </td>
+            @foreach (var subject in Model.Subjects)
+	        {
+		        <td>
+                    @student.Marks.FirstOrDefault(x => x.SubjectId == subject.Id).Score
+		        </td>
+                <td  class="rightborder">
+                    @student.Marks.FirstOrDefault(x => x.SubjectId == subject.Id).Rating
+                </td>
+	        }
+
+            <td>
+                @student.Score
+            </td>
+
+            <td>
+                @student.Rating
+            </td>
+        </tr>
+    }
+
+    <tr>
+        <th class="rightborder">
+            По группе <br />в среднем
+        </th>
+
+        @foreach (var subject in Model.Subjects)
+        {
+            <th colspan="2" class="rightborder">
+                @if (Model.Students.Count != 0)
+                { 
+                    @subject.AverageScore.ToString().Substring(0, Math.Min(5, subject.AverageScore.ToString().Length))
+                }
+            </th>
+        }
+
+        <th colspan="2">
+            &nbsp
+        </th>
+    </tr>
+</table>
+
+<table>
+@foreach (var item in Model.Subjects)
+{
+    <tr>
+        <td class="descr">
+            <strong>@item.ShortName</strong>
+        </td> 
+        <td>
+            &nbsp @item.Name
+        </td>
+    </tr>
+}
+</table>
+
+<br />
+<h3 class="cent">@Html.ActionLink("Назад", "Index", "Group", new { id = ViewBag.GroupId}, null)</h3>

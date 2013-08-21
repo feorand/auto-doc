@@ -1,0 +1,55 @@
+﻿@model AutoDoc.Models.Mark
+
+@{
+    ViewBag.Title = "Выставление баллов";
+}
+
+<h2> @ViewBag.Title </h2>
+
+@using (Html.BeginForm()) {
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend> @ViewBag.Title </legend>
+
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.SubjectId)
+        @Html.HiddenFor(model => model.StudentId)
+        @Html.HiddenFor(mdoel => Model.FormId)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.StudentName)
+            @Html.DisplayFor(model => model.StudentName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.FormName)
+            @Html.DisplayFor(model => model.FormName)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.MaxScore)
+            @Html.DisplayFor(model => model.MaxScore)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.Score)
+        </div>
+        <div class="editor-field">
+            @Html.TextBoxFor(model => model.Score, new { type="number", min="0", max=Model.MaxScore.ToString(),})
+            @Html.ValidationMessageFor(model => model.Score)
+        </div>
+        
+        <p>
+            <input type="submit" value="Сохранить" />
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Назад", "Index", "Subject", new { id = Model.SubjectId }, null)
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

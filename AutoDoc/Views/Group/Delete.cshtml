@@ -1,0 +1,23 @@
+﻿@model AutoDoc.Models.Group
+
+@{
+    ViewBag.Title = "Удаление группы";
+}
+
+<h2> @ViewBag.Title </h2>
+
+<h3> Вы действительно хотите удалить группу? </h3>
+<fieldset>
+    <legend> @ViewBag.Title </legend>
+
+    <div class="display-label">
+         <strong>@Html.DisplayNameFor(model => model.GroupName):</strong> @Html.DisplayFor(model => model.GroupName)
+    </div>
+</fieldset>
+
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Удалить" /> |
+        @Html.ActionLink("Назад", "List")
+    </p>
+}

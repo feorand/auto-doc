@@ -1,0 +1,45 @@
+﻿@model AutoDoc.Models.Group
+
+@{
+    ViewBag.Title = Model.GroupName;
+}
+
+<style>
+    h3.cent
+    {
+        text-align: center;
+    }
+</style>
+
+<h2>Группа @Model.GroupName </h2>
+
+@if (WebSecurity.IsAuthenticated && (User.IsInRole("Учебная часть") || User.IsInRole("Администратор")))
+{ 
+    @Html.ActionLink("Изменить информацию", "Edit", new { id = Model.Id})
+    <hr />
+}
+
+
+@Html.ActionLink("Рейтинг группы", "Rating", new { id = Model.Id})
+
+
+@if (WebSecurity.IsAuthenticated && (User.IsInRole("Учебная часть") || User.IsInRole("Администратор")))
+{ 
+    <hr />    
+    <h3>Студенты </h3>    
+    @Html.ActionLink("Добавить студента", "Create", "Student", new { GroupId = Model.Id }, null)
+    @Html.Action("_students", "Student", new { model = Model.Students })
+    <hr />
+}
+
+<h3>Дисциплины </h3>
+
+@if (WebSecurity.IsAuthenticated && (User.IsInRole("Учебная часть") || User.IsInRole("Администратор")))
+{ 
+    @Html.ActionLink("Добавить дисциплину", "Create", "Subject", new { GroupId = Model.Id }, null)
+}
+
+@Html.Action("_subjects", "Subject", new { model = Model.Subjects})
+
+<br />
+<h3 class="cent">@Html.ActionLink("Назад", "List", "Group")</h3>
